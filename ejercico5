@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+<body style="text-align: center;">
+
+    <h1 style="color: blue;">Contador</h1>
+
+    <script>
+        class ContadorComponent extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: "open" });
+                this._contador = 0;
+                
+                this.render();
+            }
+
+            render() {
+                this.shadowRoot.innerHTML = `
+                    <style>
+                        div {
+                            color: green;
+                        }
+                        button {
+                            color: red;
+                        }
+                    </style>
+                    <div>${this._contador}</div>
+                    <button id="incrementarButton">Incrementar</button>
+                    <button id="disminuirButton">Disminuir</button>
+                `;
+
+                this.shadowRoot.getElementById("incrementarButton").addEventListener("click", () => this.incrementar());
+                this.shadowRoot.getElementById("disminuirButton").addEventListener("click", () => this.disminuir());
+            }
+
+            incrementar() {
+                this._contador++;
+                this.actualizarDisplay();
+            }
+
+            disminuir() {
+                this._contador--;
+                this.actualizarDisplay();
+            }
+
+            actualizarDisplay() {
+                const contadorDisplay = this.shadowRoot.querySelector("div");
+                contadorDisplay.textContent = this._contador;
+            }
+        }
+
+        customElements.define("contador-component", ContadorComponent);
+    </script>
+
+    <contador-component style="margin: 0 auto;"></contador-component>
+</body>
+</html>

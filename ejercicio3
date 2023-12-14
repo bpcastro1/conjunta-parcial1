@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .contenedor-component {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .header-container {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      background-color: #3498db;
+      padding: 10px;
+      text-align: center;
+      transition: background-color 0.5s ease;
+    }
+
+    .header-container:hover {
+      background-color: #e74c3c;
+    }
+
+    .formulario {
+      background-color: #3498db;
+      padding: 20px;
+      border-radius: 10px;
+      color: #fff;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #2ecc71;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #27ae60;
+    }
+
+    .resultado {
+      margin-top: 20px;
+    }
+
+    .cube {
+      width: 50px;
+      height: 50px;
+      background-color: #27ae60;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      animation: moveCube 7s infinite linear, changeColor 2s infinite alternate;
+    }
+
+    @keyframes moveCube {
+      0% {
+        left: 0;
+      }
+      50% {
+        left: calc(100% - 50px);
+      }
+      100% {
+        left: 0;
+      }
+    }
+
+    @keyframes changeColor {
+      0% {
+        background-color: #27ae60;
+      }
+      100% {
+        background-color: #3498db;
+      }
+    }
+  </style>
+</head>
+<body>
+    <h1 style="color: blue;">Ejercicio 5</h1>
+  <template id="contenedor-component-template">
+    <div class="contenedor-component">
+      <div class="header-container">
+        <slot name="header"></slot>
+      </div>
+      <div class="formulario">
+        <slot name="formulario"></slot>
+      </div>
+      <div class="cube-container">
+        <slot name="cube"></slot>
+      </div>
+    </div>
+  </template>
+
+  <!-- Componente 1: Header -->
+  <template id="header-template">
+    <div class="header">Slots</div>
+  </template>
+
+  <!-- Componente 2: Formulario -->
+  <template id="formulario-template">
+    <form id="miFormulario">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <button type="button" onclick="mostrarContenido()">Enviar</button>
+    </form>
+    <div class="resultado"></div>
+  </template>
+
+  <!-- Componente 3: Cubo -->
+  <template id="cube-template">
+    <div class="cube"></div>
+  </template>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Obtener el contenedor template
+      const contenedorComponentTemplate = document.getElementById('contenedor-component-template');
+      const contenedorComponentClone = document.importNode(contenedorComponentTemplate.content, true);
+
+      // Obtener los otros componentes
+      const headerTemplate = document.getElementById('header-template');
+      const formularioTemplate = document.getElementById('formulario-template');
+      const cubeTemplate = document.getElementById('cube-template');
+
+      // Clonar los componentes y añadirlos al contenedor utilizando slots
+      const headerClone = document.importNode(headerTemplate.content, true);
+      const formularioClone = document.importNode(formularioTemplate.content, true);
+      const cubeClone = document.importNode(cubeTemplate.content, true);
+
+      contenedorComponentClone.querySelector('[name="header"]').appendChild(headerClone);
+      contenedorComponentClone.querySelector('[name="formulario"]').appendChild(formularioClone);
+      contenedorComponentClone.querySelector('[name="cube"]').appendChild(cubeClone);
+
+      // Añadir el contenedor al body
+      document.body.appendChild(contenedorComponentClone);
+    });
+
+    // Función para mostrar el contenido del formulario
+    function mostrarContenido() {
+      const nombre = document.getElementById("nombre").value;
+      const email = document.getElementById("email").value;
+      const resultado = document.querySelector(".resultado");
+
+      // Mostrar el contenido en la parte inferior del formulario
+      resultado.innerHTML = `<p>Nombre: ${nombre}</p><p>Email: ${email}</p>`;
+
+      // Borrar el resultado después de 5 segundos
+      setTimeout(function () {
+        resultado.innerHTML = '';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
